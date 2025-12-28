@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scratch Adventure</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+html,body{margin:0;height:100vh;background:#d3d3d3;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:system-ui,Arial;text-align:center;}
+.main-title{font-size:42px;font-weight:800;color:#000;margin-bottom:4px;}
+.sub-title{font-size:18px;color:#333;margin-bottom:20px;}
+.instruct{font-size:42px;font-weight:800;color:#000;margin-bottom:25px;}
+.wrap{position:relative;width:360px;height:330px;}
+.heart-white{position:absolute;inset:0;background:#fff;clip-path:path("M180 270 C 0 160 60 -20 180 80 C 300 -20 360 160 180 270 Z");}
+.heart-mask{position:absolute;inset:0;clip-path:path("M180 270 C 0 160 60 -20 180 80 C 300 -20 360 160 180 270 Z");display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden;}
+.heart-mask img{width:100%;height:100%;object-fit:contain;display:none;}
+.heart-mask .dare{font-size:18px;font-weight:700;text-align:center;padding:8px;white-space:pre-wrap;word-break:break-word;display:none;max-height:100%;overflow:auto;}
+canvas{position:absolute;inset:0;touch-action:none;}
+button{margin-top:25px;padding:12px 28px;border:none;border-radius:6px;background:#ff0000;color:#fff;font-size:16px;}
+.credit{margin-top:8px;font-size:12px;color:#666;}
+</style>
+</head>
+<body>
+
+<div class="main-title">Scratch Adventure</div>
+<div class="sub-title">Only for couples</div>
+<div class="instruct">Scratch the field with your finger</div>
+
+<div class="wrap">
+  <div class="heart-white"></div>
+  <div class="heart-mask">
+    <img id="heartImg">
+    <div class="dare" id="heartDare"></div>
+  </div>
+  <canvas id="scratch"></canvas>
+</div>
+
+<button onclick="location.reload()">Refresh</button>
+<div class="credit">created by dev_harrryyy</div>
+
+<script>
+/* ===== CARTOON POSITION IMAGES ===== */
+const images = [
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152129_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152130_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152131_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152132_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152133_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152134_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152135_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152136_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152137_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152138_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152139_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152140_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152141_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152142_1280.png",
+  "https://cdn.pixabay.com/photo/2019/04/24/15/12/cartoon-4152143_1280.png"
+];
+
+/* ===== DARE TEXT ===== */
+const dares = [
+  "Cartoon Lotus – wrap & rock",
+  "Cartoon Cowgirl – eyes locked",
+  "Cartoon Reverse – set pace",
+  "Cartoon Spoon – sync breath",
+  "Cartoon Missionary – legs high",
+  "Cartoon Edge-bed – deep",
+  "Cartoon Seated – kiss nonstop",
+  "Cartoon Butterfly – pillow under",
+  "Cartoon Doggy – gentle pull",
+  "Cartoon 69 – hum a tune",
+  "Cartoon Pretzel – left-right",
+  "Cartoon Flatiron – pillow below",
+  "Cartoon Stand – wall support",
+  "Cartoon Wheelbarrow – hold calves",
+  "Cartoon Cowboy – lean back"
+];
+
+/* ===== NO-REPEAT LOGIC ===== */
+const usedImg = new Set(), usedTxt = new Set();
+function pickUnique(arr, used){
+  const remain = arr.map((_,i)=>i).filter(i=>!used.has(i));
+  if(!remain.length){ used.clear(); return [arr[0], 0]; }
+  const idx = remain[Math.floor(Math.random()*remain.length)];
+  return [arr[idx], idx];
+}
+
+/* ===== 60 % IMAGE CHANCE ===== */
+const showImage = Math.random() < 0.6;
+const imgEl  = document.getElementById("heartImg");
+const dareEl = document.getElementById("heartDare");
+
+if(showImage){
+  const [src, idx] = pickUnique(images, usedImg);
+  imgEl.src = src;
+  usedImg.add(idx);
+  imgEl.style.display = "block";
+}else{
+  const [txt, idx] = pickUnique(dares, usedTxt);
+  dareEl.textContent = txt;
+  usedTxt.add(idx);
+  dareEl.style.display = "block";
+}
+
+/* ===== SCRATCH CANVAS ===== */
+const canvas = document.getElementById("scratch");
+const ctx = canvas.getContext("2d");
+canvas.width = 360;
+canvas.height= 330;
+
+/* RED SCRATCH LAYER (removes to show white) */
+ctx.fillStyle = "#ff0000";
+ctx.beginPath();
+ctx.moveTo(180,270);
+ctx.bezierCurveTo(0,160,60,-20,180,80);
+ctx.bezierCurveTo(300,-20,360,160,180,270);
+ctx.closePath();
+ctx.fill();
+ctx.globalCompositeOperation = "destination-out";
+
+/* scratch action */
+let scratching = false;
+canvas.onpointerdown = ()=> scratching = true;
+canvas.onpointerup = canvas.onpointerleave = ()=> scratching = false;
+canvas.onpointermove = e=>{
+  if(!scratching) return;
+  const r = canvas.getBoundingClientRect();
+  ctx.beginPath();
+  ctx.arc(e.clientX-r.left, e.clientY-r.top, 24, 0, Math.PI*2);
+  ctx.fill();
+};
+</script>
+</body>
+</html>
