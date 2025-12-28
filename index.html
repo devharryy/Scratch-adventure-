@@ -1,3 +1,4 @@
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +10,11 @@ html,body{margin:0;height:100vh;background:#d3d3d3;display:flex;flex-direction:c
 .main-title{font-size:42px;font-weight:800;color:#000;margin-bottom:4px;}
 .sub-title{font-size:18px;color:#333;margin-bottom:20px;}
 .instruct{font-size:42px;font-weight:800;color:#000;margin-bottom:25px;}
-.wrap{position:relative;width:360px;height:330px;}
-.heart-white{position:absolute;inset:0;background:#fff;clip-path:path("M180 270 C 0 160 60 -20 180 80 C 300 -20 360 160 180 270 Z");}
-.heart-mask{position:absolute;inset:0;clip-path:path("M180 270 C 0 160 60 -20 180 80 C 300 -20 360 160 180 270 Z");display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden;}
+.wrap{position:relative;width:420px;height:380px;}
+.heart-white{position:absolute;inset:0;background:#fff;clip-path:path("M210 300 C 0 180 60 -20 210 90 C 360 -20 420 180 210 300 Z");}
+.heart-mask{position:absolute;inset:0;clip-path:path("M210 300 C 0 180 60 -20 210 90 C 360 -20 420 180 210 300 Z");display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden;}
 .heart-mask img{width:100%;height:100%;object-fit:contain;display:none;}
-.heart-mask .dare{font-size:18px;font-weight:700;text-align:center;padding:8px;white-space:pre-wrap;word-break:break-word;display:none;max-height:100%;overflow:auto;}
+.heart-mask .dare{font-size:16px;font-weight:700;text-align:center;padding:10px;white-space:pre-wrap;word-break:break-word;display:none;}
 canvas{position:absolute;inset:0;touch-action:none;}
 button{margin-top:25px;padding:12px 28px;border:none;border-radius:6px;background:#ff0000;color:#fff;font-size:16px;}
 .credit{margin-top:8px;font-size:12px;color:#666;}
@@ -105,15 +106,15 @@ if(showImage){
 /* ===== SCRATCH CANVAS ===== */
 const canvas = document.getElementById("scratch");
 const ctx = canvas.getContext("2d");
-canvas.width = 360;
-canvas.height= 330;
+canvas.width = 420;
+canvas.height= 380;
 
 /* RED SCRATCH LAYER (removes to show white) */
 ctx.fillStyle = "#ff0000";
 ctx.beginPath();
-ctx.moveTo(180,270);
-ctx.bezierCurveTo(0,160,60,-20,180,80);
-ctx.bezierCurveTo(300,-20,360,160,180,270);
+ctx.moveTo(210,300);
+ctx.bezierCurveTo(0,180,60,-20,210,90);
+ctx.bezierCurveTo(360,-20,420,180,210,300);
 ctx.closePath();
 ctx.fill();
 ctx.globalCompositeOperation = "destination-out";
@@ -126,7 +127,7 @@ canvas.onpointermove = e=>{
   if(!scratching) return;
   const r = canvas.getBoundingClientRect();
   ctx.beginPath();
-  ctx.arc(e.clientX-r.left, e.clientY-r.top, 24, 0, Math.PI*2);
+  ctx.arc(e.clientX-r.left, e.clientY-r.top, 26, 0, Math.PI*2);
   ctx.fill();
 };
 </script>
