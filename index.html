@@ -1,4 +1,5 @@
- <!DOCTYPE html>
+ 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -42,23 +43,12 @@ html,body{
   background:#fff;
 }
 
-.heart-mask img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  display:none;
-}
-
-/* ✅ AUTO 2–3 LINE DARE FIX */
 .heart-mask .dare{
-  max-width:70%;
+  max-width:75%;
   font-size:16px;
   font-weight:700;
-  line-height:1.4;
+  line-height:1.5;
   text-align:center;
-  word-wrap:break-word;
-  white-space:normal;
-  display:none;
 }
 
 canvas{
@@ -89,7 +79,6 @@ button{
 <div class="wrap">
   <div class="heart-white"></div>
   <div class="heart-mask">
-    <img id="heartImg">
     <div class="dare" id="heartDare"></div>
   </div>
   <canvas id="scratch"></canvas>
@@ -102,37 +91,49 @@ button{
 /* ===== DARE LIST ===== */
 const dares = [
   "Look into each other's eyes and try not to kiss",
-  "Reveal one secret honestly",
-  "Whisper one thing you like about me",
-  "Hold my hand tightly for one minute",
-  "Say my name in the sweetest way",
-  "Sit close and match my breathing",
+  "Reveal one secret honestly right now",
+  "Whisper one thing you truly like about me",
+  "Hold my hand tightly for one full minute",
+  "Say my name in the sweetest possible way",
+  "Sit close and slowly match my breathing",
   "Tell me what you noticed first about me",
-  "Smile at me without speaking",
-  "Give a gentle forehead touch",
-  "Promise one fun plan together"
+  "Smile at me without speaking at all",
+  "Give a gentle and soft forehead touch",
+  "Promise one fun plan we will do together"
 ];
 
-/* ✅ NO-REPEAT SYSTEM */
-let remainingDares = [...dares];
-
+/* ===== NO REPEAT SYSTEM ===== */
+let remaining = [...dares];
 function getUniqueDare(){
-  if(remainingDares.length === 0){
-    remainingDares = [...dares]; // reset only after all shown
+  if(remaining.length === 0) remaining = [...dares];
+  return remaining.splice(Math.floor(Math.random()*remaining.length),1)[0];
+}
+
+/* ===== AUTO LINE BREAK (REAL FIX) ===== */
+function formatDare(text){
+  const words = text.split(" ");
+  if(words.length <= 5) return text;
+
+  if(words.length <= 10){
+    const mid = Math.ceil(words.length/2);
+    return words.slice(0,mid).join(" ") + "<br>" +
+           words.slice(mid).join(" ");
   }
-  const index = Math.floor(Math.random() * remainingDares.length);
-  return remainingDares.splice(index,1)[0];
+
+  const part = Math.ceil(words.length/3);
+  return words.slice(0,part).join(" ") + "<br>" +
+         words.slice(part,part*2).join(" ") + "<br>" +
+         words.slice(part*2).join(" ");
 }
 
 const dareEl = document.getElementById("heartDare");
-dareEl.textContent = getUniqueDare();
-dareEl.style.display = "block";
+dareEl.innerHTML = formatDare(getUniqueDare());
 
 /* ===== SCRATCH CANVAS ===== */
 const canvas = document.getElementById("scratch");
 const ctx = canvas.getContext("2d");
 canvas.width = 420;
-canvas.height= 380;
+canvas.height = 380;
 
 /* RED SCRATCH LAYER */
 ctx.fillStyle = "#ff0000";
