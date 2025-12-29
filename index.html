@@ -5,6 +5,7 @@
 <meta charset="UTF-8">
 <title>Scratch Adventure</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 html,body{
   margin:0;
@@ -22,7 +23,11 @@ html,body{
 .sub-title{font-size:18px;color:#333;margin-bottom:20px;}
 .instruct{font-size:42px;font-weight:800;color:#000;margin-bottom:25px;}
 
-.wrap{position:relative;width:420px;height:380px;}
+.wrap{
+  position:relative;
+  width:420px;
+  height:380px;
+}
 
 .heart-white{
   position:absolute;
@@ -38,17 +43,17 @@ html,body{
   display:flex;
   align-items:center;
   justify-content:center;
-  pointer-events:none;
-  overflow:hidden;
   background:#fff;
+  pointer-events:none;
 }
 
 .heart-mask .dare{
-  max-width:75%;
+  max-width:65%;
   font-size:16px;
   font-weight:700;
   line-height:1.5;
   text-align:center;
+  white-space:pre-line; /* 🔥 MOST IMPORTANT */
 }
 
 canvas{
@@ -67,7 +72,11 @@ button{
   font-size:16px;
 }
 
-.credit{margin-top:8px;font-size:12px;color:#666;}
+.credit{
+  margin-top:8px;
+  font-size:12px;
+  color:#666;
+}
 </style>
 </head>
 <body>
@@ -88,7 +97,7 @@ button{
 <div class="credit">created by @urluv_herrryyy</div>
 
 <script>
-/* ===== DARE LIST ===== */
+/* ===== DARES ===== */
 const dares = [
   "Look into each other's eyes and try not to kiss",
   "Reveal one secret honestly right now",
@@ -102,36 +111,30 @@ const dares = [
   "Promise one fun plan we will do together"
 ];
 
-/* ===== NO REPEAT SYSTEM ===== */
-let remaining = [...dares];
+/* ===== NO REPEAT ===== */
+let pool = [...dares];
 function getUniqueDare(){
-  if(remaining.length === 0) remaining = [...dares];
-  return remaining.splice(Math.floor(Math.random()*remaining.length),1)[0];
+  if(pool.length === 0) pool = [...dares];
+  return pool.splice(Math.floor(Math.random()*pool.length),1)[0];
 }
 
-/* ===== AUTO LINE BREAK (REAL FIX) ===== */
-function formatDare(text){
-  const words = text.split(" ");
-  if(words.length <= 5) return text;
-
-  if(words.length <= 10){
-    const mid = Math.ceil(words.length/2);
-    return words.slice(0,mid).join(" ") + "<br>" +
-           words.slice(mid).join(" ");
+/* ===== 🔥 HARD FORCE WRAP ===== */
+function forceWrap(text){
+  const maxChars = 16;   // ek line me itne chars
+  let out = "";
+  for(let i=0;i<text.length;i+=maxChars){
+    out += text.slice(i, i+maxChars) + "\n";
   }
-
-  const part = Math.ceil(words.length/3);
-  return words.slice(0,part).join(" ") + "<br>" +
-         words.slice(part,part*2).join(" ") + "<br>" +
-         words.slice(part*2).join(" ");
+  return out.trim();
 }
 
 const dareEl = document.getElementById("heartDare");
-dareEl.innerHTML = formatDare(getUniqueDare());
+dareEl.textContent = forceWrap(getUniqueDare());
 
 /* ===== SCRATCH CANVAS ===== */
 const canvas = document.getElementById("scratch");
 const ctx = canvas.getContext("2d");
+
 canvas.width = 420;
 canvas.height = 380;
 
@@ -158,5 +161,6 @@ canvas.onpointermove = e=>{
   ctx.fill();
 };
 </script>
+
 </body>
 </html>
